@@ -8,10 +8,11 @@ version = "0.1.0"
 description = "AI-powered data analysis module for LLMs"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = {file = "LICENSE"}
 authors = [
-    {name = "Analytic Engine Team"}
+    {name = "Duong Luong Ngoc Tung", email = "duonglnt@example.com"}
 ]
+keywords = ["ai", "data-analysis", "llm", "agent", "sandbox"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -31,6 +32,7 @@ dependencies = [
     "plotly>=5.12.0",
     "seaborn>=0.12.0",
     "pydantic>=2.0.0",
+    "google-generativeai>=0.3.0",
 ]
 
 [project.optional-dependencies]
@@ -41,9 +43,20 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.0.0",
 ]
+llm = [
+    "google-generativeai>=0.3.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/duonglnt/analytic-engine-agent"
+Repository = "https://github.com/duonglnt/analytic-engine-agent"
+Issues = "https://github.com/duonglnt/analytic-engine-agent/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"analytic_engine" = ["py.typed"]
 
 [tool.black]
 line-length = 100
@@ -55,3 +68,4 @@ line-length = 100
 python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
+ignore_missing_imports = true
