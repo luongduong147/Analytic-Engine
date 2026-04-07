@@ -525,6 +525,81 @@ print(result.confidence)
 
 ---
 
+## Thanh Phan 3b: Skill System (Tool cho Agent)
+
+He thong quan ly skill markdown de inject context cho agent (tuong tu `/skill` trong OpenCode).
+
+### Cau Truc File
+
+```
+skills/
+├── business_analysis/
+│   └── skill.md          # Skill phan tich nghiep vu
+├── data_processing/
+│   └── skill.md          # Skill xu ly du lieu
+└── ...
+```
+
+### Cau Truc File Skill (`.md`)
+
+```markdown
+# Skill: Ten Skill
+
+## Overview
+Mo ta skill
+
+## When to Use
+- Khi nao su dung skill nay
+
+## Content
+Noi dung huong dan...
+```
+
+### Skill Manager API
+
+```python
+from analytic_engine.skills import SkillManager, Skill
+```
+
+| Phuong thuc | Mo ta |
+|-------------|-------|
+| `get_skill(name: str) -> Optional[Skill]` | Lay skill theo ten |
+| `get_skill_content(name: str) -> Optional[str]` | Lay noi dung skill |
+| `list_skills() -> List[str]` | Danh sach tat ca skill |
+| `search_skills(query: str) -> List[Skill]` | Tim kiem skill |
+| `get_skill_for_task(task: str) -> Optional[Skill]` | Tim skill phu hop voi task |
+
+### Su dung tu Agent
+
+```python
+# Lay skill theo ten
+skill = agent.get_skill("business data analysis")
+print(skill.content)  # Inject vao prompt
+
+# Tim kiem skill
+results = agent.search_skills("business analysis")
+for r in results:
+    print(r.name, r.category)
+
+# Auto-select skill cho task
+skill = agent.get_skill_for_task("phan tich doanh thu")
+```
+
+### Skill co san
+
+| Ten | Category | Mo ta |
+|-----|----------|-------|
+| `business data analysis` | business_analysis | Huong dan phan tich du lieu ngiep vu |
+| `data processing pipeline` | data_processing | Xu ly va transform du lieu |
+
+### Luu Y
+
+- CoT (Chain of Thought) hien tai van duoc xu ly noi bo trong `ChainOfThought`
+- Business Analyst agent (phat trien sau) se xu ly CoT trong prompt
+- Skill system chi cap context/methodology, khong phai logic suy luan
+
+---
+
 ## Thanh Phan 4: Visualization Engine
 
 Tao bieu do va dinh dau ra.
@@ -697,6 +772,23 @@ result = agent.visualize(
    Tra ve ket qua + truc quan hoa
 ```
 
+### Luu Y: Skill System trong luong
+
+```
+1. YEU CAU
+   User/LLM gui yeu cau phan tich
+           │
+           ▼
+2. LAY SKILL (Optional)
+   Agent goi skill de lay context:
+   - agent.get_skill("business data analysis")
+   - Inject noi dung skill vao prompt
+           │
+           ▼
+3. SUY LUAN
+   ...
+```
+
 ---
 
 ## Diem Mo Rong
@@ -706,3 +798,4 @@ result = agent.visualize(
 - **Mau bieu do tuychinh**: Them vao `TemplateLibrary.TEMPLATES`
 - **Che do suy luan tuychinh**: Mo rong `ReasoningOrchestrator`
 - **Loai bieu do them**: Them vao `VisualizationEngine.CHART_METHODS`
+- **Them skill moi**: Tao file `.md` trong thu muc `skills/<category>/`

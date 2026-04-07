@@ -75,7 +75,7 @@
 | `get_aggregated` | source, agg_func, group_by | DataFrame |
 
 #### C. Reasoning Framework
-**Purpose:** Multi-step reasoning with self-verification
+**Purpose:** Multi-step reasoning with self-verification and skill retrieval
 
 **Components:**
 - `ReasoningOrchestrator`: Manages reasoning flow
@@ -83,10 +83,43 @@
 - `ChainBuilder`: Builds sequential reasoning chains
 - `SelfReflector`: Evaluates reasoning quality
 - `VerificationEngine`: Validates intermediate results
+- `SkillManager`: Manages skill retrieval for context injection
+
+**Skill System (Agent Tool):**
+- `SkillManager`: Loads and manages skills from markdown files
+- `Skill`: Represents a skill with name, category, content, and tags
+- Similar to `/skill` command in OpenCode/Claude Code
+
+**Skill Retrieval API:**
+```python
+agent.get_skill(name: str) -> Optional[Skill]
+agent.get_skill_content(name: str) -> Optional[str]
+agent.list_skills() -> List[str]
+agent.search_skills(query: str) -> List[Skill]
+agent.get_skill_for_task(task: str) -> Optional[Skill]
+```
+
+**Skill File Structure:**
+```
+skills/
+├── business_analysis/
+│   └── skill.md          # Markdown skill file
+├── data_processing/
+│   └── skill.md
+└── ...
+```
 
 **Reasoning Modes:**
 1. **Chain of Thought (CoT):** Sequential step-by-step reasoning
 2. **Tree of Thought (ToT):** Parallel exploration of multiple paths
+
+**Note:** CoT logic can be injected into prompt for Business Analyst agent to handle (future enhancement).
+
+**Self-Reflection Features:**
+- Confidence scoring per step
+- Error detection and recovery
+- Alternative path exploration
+- Result verification against constraints
 
 **Self-Reflection Features:**
 - Confidence scoring per step

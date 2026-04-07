@@ -11,11 +11,13 @@ class TestCodeExecutor:
 
     def test_execute_simple_code(self, code_executor):
         """Test execution of simple valid code"""
-        code = "print(json.dumps({'result': 42}))"
+        code = "import math\nprint(math.sqrt(16))"
         result = code_executor.execute(code)
 
         assert result.success is True
         assert result.output is not None
+        
+        print(result.output)
 
     def test_execute_with_context(self, code_executor):
         """Test code execution with context variables"""
@@ -24,7 +26,7 @@ class TestCodeExecutor:
         result = code_executor.execute(code, context=context)
 
         assert result.success is True
-
+        print(result.output)
     def test_validate_code_dangerous_import(self, code_executor):
         """Test detection of dangerous import statements"""
         code = "import os\nprint('hello')"
@@ -146,3 +148,9 @@ class TestExecutionResult:
         assert result.success is False
         assert result.error == "Import blocked"
         assert result.output is None
+
+
+if __name__ == "__main__":
+    exec_test = TestCodeExecutor()
+    exec_test.test_execute_simple_code(CodeExecutor(ExecutionConfig()))
+    exec_test.test_execute_with_context(CodeExecutor(ExecutionConfig()))
